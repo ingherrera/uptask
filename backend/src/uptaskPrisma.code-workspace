@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../../Trabajo/apuntes/comandos"
+		}
+	],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#13321d",
+      "activityBar.background": "#13321d",
+      "activityBar.foreground": "#e7e7e7",
+      "activityBar.inactiveForeground": "#e7e7e799",
+      "activityBarBadge.background": "#6b46b9",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "commandCenter.border": "#e7e7e799",
+      "sash.hoverBorder": "#13321d",
+      "statusBar.background": "#13321d",
+      "statusBar.foreground": "#e7e7e7",
+      "statusBarItem.hoverBackground": "#215732",
+      "statusBarItem.remoteBackground": "#13321d",
+      "statusBarItem.remoteForeground": "#e7e7e7",
+      "tab.activeBorder": "#13321d",
+      "titleBar.activeBackground": "#13321d",
+      "titleBar.activeForeground": "#e7e7e7",
+      "titleBar.inactiveBackground": "#13321d99",
+      "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#215732"
+  }
+}

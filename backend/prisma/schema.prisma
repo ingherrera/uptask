@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"] 
+}
+
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int   @id @default(autoincrement())
+  email     String @unique
+  password  String
+  name      String
+  confirmed Boolean @default(false)
+
+  //Relacion con Project(Manager)
+  Project   Project[] @relation("Manager:User-Project")
+
+  //Relacion con Team
+  Team      Team[] @relation("User-Team")
+
+  // Relacion con Token
+  Tokens    Token[]  @relation("User-Token")
+
+  // Relacion con TaskStatusHistory
+  TaskStatusHistory TaskStatusHistory[] @relation("User-TaskStatusHistory")
+
+  // Relacion con Note
+  Note  Note[] @relation("User-Note")
+}
+
+model Project {
+  id          Int   @id @default(autoincrement())
+  projectName   String
+  clientName    String
+  description   String
+  createdAt     DateTime @default(now())  // Fecha de creación
+  updatedAt     DateTime @updatedAt       // Fecha de última actualización
+  
+  // Relacion Manager:User-Project
+  User          User @relation("Manager:User-Project",fields: [manager], references: [id])
+  manager       Int
+
+  // Relacion Project-Tasks
+  Tasks         Task[] @relation("Project-Tasks")
+
+  // Relacion Project-Team
+  Team          Team[] @relation("Project-Team")
+}
+
+
+model Task {
+  id            Int   @id @default(autoincrement())
+  name          String
+  description   String
+  status        taskStatus @default(pending)
+  createdAt     DateTime @default(now())  // Fecha de creación
+  updatedAt     DateTime @updatedAt       // Fecha de última actualización
+
+  // Relacion Project-Tasks
+  projectId     Int
+  project       Project @relation("Project-Tasks", fields: [projectId], references: [id],  onDelete: Cascade)
+
+  // Relacion Task-TaskStatusHistory
+  TaskStatusHistory TaskStatusHistory[] @relation("Task-TaskStatusHistory")
+
+  // Relacion Task-Note
+  Note Note[] @relation("Task-Note")
+}
+
+model TaskStatusHistory {
+  id            Int   @id @default(autoincrement())
+  status        taskStatus @default(pending)
+
+  // Relacion Task-TaskStatusHistory
+  taskId     Int
+  task       Task @relation("Task-TaskStatusHistory", fields: [taskId], references: [id],  onDelete: Cascade)
+
+  // Relacion User-TaskStatusHistory
+  userId     Int
+  user       User @relation("User-TaskStatusHistory", fields: [userId], references: [id])
+}
+
+model Note {
+  id            Int   @id @default(autoincrement())
+  content String
+
+   // Relacion uno a muchos con User
+  createdAt     DateTime @default(now())  // Fecha de creación
+  updatedAt     DateTime @updatedAt       // Fecha de última actualización
+
+  // Relacion Task-Note
+  taskId     Int
+  task       Task @relation("Task-Note", fields: [taskId], references: [id], onDelete: Cascade)
+
+  // Relacion User-Note
+  userId     Int
+  user       User @relation("User-Note", fields: [userId], references: [id])
+}
+
+// Tabla auxiliar
+model Token {
+  id        Int   @id @default(autoincrement())
+  token     String
+  expiresAt DateTime @default(now()) // Fecha de creación
+
+  // Relacion User-Tokens
+  userId    Int
+  user      User @relation("User-Token", fields: [userId], references: [id],  onDelete: Cascade)
+}
+
+// Tabla auxiliar
+model Team {
+  id        Int   @id @default(autoincrement())
+  
+  // Relacion con Project
+  project   Project  @relation("Project-Team", fields: [projectId], references: [id],  onDelete: Cascade)
+  projectId Int
+
+  // Relacion con User
+  user      User     @relation("User-Team",fields: [userId], references: [id])
+  userId    Int
+} 
+
+// Define el enum con los valores permitidos
+enum taskStatus  {
+  pending
+  onHold
+  inProgress
+  underReview
+  completed
+}

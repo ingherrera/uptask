@@ -1,0 +1,31 @@
+# Dependencias
+node_modules/
+
+# Build
+dist/
+
+# Logs
+*.log
+nohup.out
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Entorno
+.env
+.env.*
+
+# IDE / editor
+.vscode/
+*.code-workspace
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile-bak
+
+# Otros
+apuntesTemp.txt
