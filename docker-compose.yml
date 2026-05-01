@@ -4,7 +4,7 @@ services:
   # Base de datos MariaDB - Optimizada para Producción
   mariadb:
     image: docker.io/library/mariadb:11.4
-    container_name: prod-mariadb
+    container_name: mariadb
     restart: unless-stopped
     environment:
       MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -28,7 +28,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: prod-backend
+    container_name: backend
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -42,7 +42,7 @@ services:
     networks:
       - app-network
     volumes:
-      - ../backend/logs:/app/logs:Z
+      - ./backend/logs:/app/logs:Z
     healthcheck:
       test:
         [
@@ -61,12 +61,14 @@ services:
   # Nginx como Gateway y servidor de Frontend
   nginx:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    container_name: prod-nginx
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    container_name: nginx
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "80:80"
     depends_on:
       backend:
         condition: service_healthy
