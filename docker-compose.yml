@@ -23,9 +23,7 @@ services:
 
   # Backend (Express + Prisma) - Inmutable y seguro
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: uptask-backend:v1.0.0
     container_name: backend
     restart: unless-stopped
     environment:
@@ -58,11 +56,7 @@ services:
 
   # Nginx como Gateway y servidor de Frontend
   nginx:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        VITE_API_URL: /api
+    image: uptask-nginx:v1.0.0
     container_name: nginx
     restart: unless-stopped
     ports:
